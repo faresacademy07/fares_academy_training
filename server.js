@@ -6,6 +6,9 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+// Initialize admin account on startup
+require('./init-admin.js');
+
 const app = express();
 const PORT = process.env.PORT || 8889;
 const JWT_SECRET = process.env.JWT_SECRET || 'fares_academy_secret_key_2024';

@@ -661,6 +661,7 @@
                     <div class="user-info">
                         <div class="user-name" id="userName">المستخدم</div>
                         <div class="user-email" id="userEmail">email@example.com</div>
+                        <span id="adminBadge" style="display: none; background: var(--secondary); color: white; padding: 2px 8px; border-radius: 3px; font-size: 11px; margin-top: 5px; display: inline-block;">Admin</span>
                     </div>
                     <button class="btn-logout" onclick="handleLogout()">تسجيل الخروج</button>
                 </div>
@@ -959,6 +960,11 @@
                 });
                 allSubscribers = await response.json();
                 renderSubscribers(allSubscribers);
+                
+                // Update admin indicator
+                if (currentUser.role === 'admin') {
+                    document.getElementById('adminBadge').style.display = 'inline-block';
+                }
             } catch (error) {
                 console.error('Error loading data:', error);
             }
@@ -978,6 +984,7 @@
                         <h3>${s.name}</h3>
                         <p>📱 ${s.phone}</p>
                         <p>📅 ${s.month} • ${s.sessions} جلسات</p>
+                        ${s.userName ? `<p style="font-size: 12px; color: #666; margin-top: 5px;">👤 ${s.userName}</p>` : ''}
                     </div>
                     <div class="subscriber-item-arrow">→</div>
                 </div>

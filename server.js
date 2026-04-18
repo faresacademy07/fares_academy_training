@@ -88,6 +88,7 @@ app.post('/api/auth/register', (req, res) => {
         email,
         password: hashedPassword,
         name,
+        role: email === 'faresacademy07@hotmail.com' ? 'admin' : 'user',
         createdAt: new Date().toISOString()
     };
 
@@ -95,7 +96,7 @@ app.post('/api/auth/register', (req, res) => {
     writeDatabase(db);
 
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '30d' });
-    res.json({ success: true, token, user: { id: user.id, email: user.email, name: user.name } });
+    res.json({ success: true, token, user: { id: user.id, email: user.email, name: user.name, role: user.role } });
 });
 
 // POST /api/auth/login - Login user
@@ -114,7 +115,7 @@ app.post('/api/auth/login', (req, res) => {
     }
 
     const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '30d' });
-    res.json({ success: true, token, user: { id: user.id, email: user.email, name: user.name } });
+    res.json({ success: true, token, user: { id: user.id, email: user.email, name: user.name, role: user.role } });
 });
 
 // GET /api/auth/me - Get current user
@@ -124,7 +125,7 @@ app.get('/api/auth/me', verifyToken, (req, res) => {
     if (!user) {
         return res.status(404).json({ success: false, error: 'User not found' });
     }
-    res.json({ success: true, user: { id: user.id, email: user.email, name: user.name } });
+    res.json({ success: true, user: { id: user.id, email: user.email, name: user.name, role: user.role } });
 });
 
 // ==================== DATA ENDPOINTS ====================
@@ -157,7 +158,24 @@ app.post('/api/data/subscribers', verifyToken, (req, res) => {
 // GET /api/data/subscribers - Get all subscribers
 app.get('/api/data/subscribers', verifyToken, (req, res) => {
     const db = readDatabase();
-    const subscribers = db.data[req.userId]?.subscribers || [];
+    const user = db.users.find(u => u.id === req.userId);
+    
+    let subscribers = [];
+    if (user && user.role === 'admin') {
+        // Admin sees all subscribers from all users
+        Object.keys(db.data).forEach(userId => {
+            if (db.data[userId]?.subscribers) {
+                subscribers = subscribers.concat(db.data[userId].subscribers.map(s => ({
+                    ...s,
+                    userId: userId,
+                    userName: db.users.find(u => u.id === userId)?.name
+                })));
+            }
+        });
+    } else {
+        // Regular users see only their own subscribers
+        subscribers = db.data[req.userId]?.subscribers || [];
+    }
     res.json(subscribers);
 });
 
@@ -211,6 +229,49 @@ app.put('/api/data/subscribers/:id/session', verifyToken, (req, res) => {
     } else {
         res.status(404).json({ success: false, error: 'Subscriber not found' });
     }
+});
+
+// GET /api/admin/users - Get all users (admin only)
+app.get('/api/admin/users', verifyToken, (req, res) => {
+    const db = readDatabase();
+    const user = db.users.find(u => u.id === req.userId);
+    
+    if (!user || user.role !== 'admin') {
+        return res.status(403).json({ success: false, error: 'Admin access required' });
+    }
+    
+    const users = db.users.map(u => ({
+        id: u.id,
+        email: u.email,
+        name: u.name,
+        role: u.role,
+        createdAt: u.createdAt
+    }));
+    res.json(users);
+});
+
+// GET /api/admin/dashboard - Get all data for admin (admin only)
+app.get('/api/admin/dashboard', verifyToken, (req, res) => {
+    const db = readDatabase();
+    const user = db.users.find(u => u.id === req.userId);
+    
+    if (!user || user.role !== 'admin') {
+        return res.status(403).json({ success: false, error: 'Admin access required' });
+    }
+    
+    const allData = [];
+    Object.keys(db.data).forEach(userId => {
+        const userData = db.users.find(u => u.id === userId);
+        if (userData && db.data[userId]?.subscribers) {
+            allData.push({
+                userId: userId,
+                userName: userData.name,
+                userEmail: userData.email,
+                subscribers: db.data[userId].subscribers
+            });
+        }
+    });
+    res.json(allData);
 });
 
 // Health check

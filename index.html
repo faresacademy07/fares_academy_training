@@ -573,8 +573,9 @@
                             <thead>
                                 <tr>
                                     <th>الإجراءات</th>
-                                    <th>الحالة الصحية</th>
-                                    <th>الهدف</th>
+                                    <th>شهر الاشتراك</th>
+                                    <th>عدد الجلسات</th>
+                                    <th>رقم الجوال</th>
                                     <th>الاسم</th>
                                 </tr>
                             </thead>
@@ -639,12 +640,26 @@
                     <input type="tel" id="subscriberPhone" placeholder="رقم الجوال">
                 </div>
                 <div class="form-group">
-                    <label>الهدف</label>
-                    <input type="text" id="subscriberGoal" placeholder="الهدف من التدريب">
+                    <label>عدد الجلسات</label>
+                    <input type="number" id="subscriberSessions" placeholder="عدد الجلسات" min="1">
                 </div>
                 <div class="form-group">
-                    <label>الحالة الصحية</label>
-                    <input type="text" id="subscriberHealth" placeholder="أي إصابات أو حالات صحية">
+                    <label>شهر الاشتراك</label>
+                    <select id="subscriberMonth" style="width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 5px; font-size: 14px;">
+                        <option value="">اختر الشهر</option>
+                        <option value="يناير">يناير</option>
+                        <option value="فبراير">فبراير</option>
+                        <option value="مارس">مارس</option>
+                        <option value="أبريل">أبريل</option>
+                        <option value="مايو">مايو</option>
+                        <option value="يونيو">يونيو</option>
+                        <option value="يوليو">يوليو</option>
+                        <option value="أغسطس">أغسطس</option>
+                        <option value="سبتمبر">سبتمبر</option>
+                        <option value="أكتوبر">أكتوبر</option>
+                        <option value="نوفمبر">نوفمبر</option>
+                        <option value="ديسمبر">ديسمبر</option>
+                    </select>
                 </div>
             </div>
             <div class="modal-footer">
@@ -778,8 +793,9 @@
                         <button class="action-btn btn-edit" onclick="editSubscriber('${s.id}')">تعديل</button>
                         <button class="action-btn btn-delete" onclick="deleteSubscriber('${s.id}')">حذف</button>
                     </td>
-                    <td>${s.health || '-'}</td>
-                    <td>${s.goal || '-'}</td>
+                    <td>${s.month || '-'}</td>
+                    <td>${s.sessions || '-'}</td>
+                    <td>${s.phone || '-'}</td>
                     <td>${s.name}</td>
                 </tr>
             `).join('');
@@ -814,11 +830,11 @@
         async function addSubscriber() {
             const name = document.getElementById('subscriberName').value;
             const phone = document.getElementById('subscriberPhone').value;
-            const goal = document.getElementById('subscriberGoal').value;
-            const health = document.getElementById('subscriberHealth').value;
+            const sessions = parseInt(document.getElementById('subscriberSessions').value);
+            const month = document.getElementById('subscriberMonth').value;
 
-            if (!name) {
-                alert('يرجى إدخال اسم المشتركة');
+            if (!name || !phone || !sessions || !month) {
+                alert('يرجى ملء جميع الحقول');
                 return;
             }
 
@@ -829,7 +845,7 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ name, phone, goal, health })
+                    body: JSON.stringify({ name, phone, sessions, month })
                 });
 
                 const data = await response.json();
@@ -837,8 +853,8 @@
                     closeModal('addSubscriberModal');
                     document.getElementById('subscriberName').value = '';
                     document.getElementById('subscriberPhone').value = '';
-                    document.getElementById('subscriberGoal').value = '';
-                    document.getElementById('subscriberHealth').value = '';
+                    document.getElementById('subscriberSessions').value = '';
+                    document.getElementById('subscriberMonth').value = '';
                     loadData();
                 }
             } catch (error) {

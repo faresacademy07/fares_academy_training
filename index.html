@@ -1068,28 +1068,50 @@
             const container = document.getElementById('monthlySummary');
             
             if (currentUser.role !== 'admin') {
-                // Regular user: show monthly commission
+                // Regular user: show monthly commission by delivery month
                 const monthlyData = {};
+                const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+                
                 allSubscribers.forEach(subscriber => {
-                    const month = subscriber.month;
-                    if (!monthlyData[month]) {
-                        monthlyData[month] = 0;
-                    }
-                    const completedSessions = (subscriber.sessionDates || []).filter(d => d).length;
-                    const calc = calculateCommission(subscriber.sessions, completedSessions);
-                    monthlyData[month] += parseFloat(calc.commission);
+                    const pricePerSession = parseFloat(calculateCommission(subscriber.sessions, 1).pricePerSession);
+                    const sessionDates = subscriber.sessionDates || [];
+                    
+                    sessionDates.forEach((date, idx) => {
+                        if (date) {
+                            const dateObj = new Date(date);
+                            const monthIdx = dateObj.getMonth();
+                            const deliveryMonth = monthNames[monthIdx];
+                            
+                            if (!monthlyData[deliveryMonth]) {
+                                monthlyData[deliveryMonth] = 0;
+                            }
+                            
+                            const sessionComm = pricePerSession * 0.30;
+                            monthlyData[deliveryMonth] += sessionComm;
+                        }
+                    });
                 });
                 
                 if (Object.keys(monthlyData).length === 0) {
                     container.innerHTML = '<p class="empty-message">لا توجد بيانات</p>';
                     return;
                 }
-                container.innerHTML = Object.entries(monthlyData).map(([month, commission]) => `
+                
+                let totalComm = 0;
+                const allMonthsSelected = selectedMonths.length === 12;
+                
+                container.innerHTML = Object.entries(monthlyData).filter(([month, comm]) => selectedMonths.includes(month)).map(([month, commission]) => {
+                    totalComm += commission;
+                    return `
                     <div class="month-card">
                         <div class="month-name">${month}</div>
                         <div class="month-commission">${commission.toFixed(2)}</div>
                         <div class="month-commission-label">ريال سعودي</div>
-                    </div>`).join('');
+                    </div>`}).join('') + (allMonthsSelected ? `
+                    <div style="background: linear-gradient(135deg, var(--primary), #003d99); color: white; padding: 20px; border-radius: 8px; margin-top: 15px; text-align: center;">
+                        <div style="font-size: 14px; margin-bottom: 10px;">إجمالي العمولة</div>
+                        <div style="font-size: 28px; font-weight: bold; color: var(--secondary);">${totalComm.toFixed(2)} ريال</div>
+                    </div>` : '');
             } else {
                 // Admin: show employees with monthly breakdown by delivery month
                 const employeeMonthlyData = {};

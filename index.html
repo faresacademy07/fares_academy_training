@@ -684,6 +684,10 @@
                 <!-- DASHBOARD VIEW -->
                 <div id="dashboardView" class="dashboard-view">
                     <h2>📊 ملخص العمولات الشهرية</h2>
+                    <div style="margin-bottom: 20px; padding: 15px; background: white; border-radius: 8px;">
+                        <label style="display: block; margin-bottom: 10px; font-weight: 600; color: var(--primary);">اختر الأشهر:</label>
+                        <div id="monthFilter" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px;"></div>
+                    </div>
                     <div class="monthly-summary" id="monthlySummary"></div>
                 </div>
 
@@ -781,6 +785,7 @@
         let token = null;
         let allSubscribers = [];
         let currentSubscriber = null;
+        let selectedMonths = [];
 
         // Pricing data
         const pricing = {
@@ -903,7 +908,7 @@
                 document.getElementById('listView').classList.add('active');
             } else if (tab === 'dashboard') {
                 document.getElementById('dashboardView').classList.add('active');
-                renderDashboard();
+                initMonthFilter();
             }
         }
 
@@ -1033,6 +1038,32 @@
             }
         }
 
+
+        function initMonthFilter() {
+            const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+            const filterContainer = document.getElementById('monthFilter');
+            filterContainer.innerHTML = monthNames.map((month, idx) => `
+                <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                    <input type="checkbox" value="${month}" onchange="toggleMonth(this)" style="cursor: pointer;">
+                    <span style="font-size: 12px;">${month}</span>
+                </label>
+            `).join('');
+            selectedMonths = monthNames;
+            renderDashboard();
+        }
+        
+        function toggleMonth(checkbox) {
+            const month = checkbox.value;
+            if (checkbox.checked) {
+                if (!selectedMonths.includes(month)) {
+                    selectedMonths.push(month);
+                }
+            } else {
+                selectedMonths = selectedMonths.filter(m => m !== month);
+            }
+            renderDashboard();
+        }
+
         function renderDashboard() {
             const container = document.getElementById('monthlySummary');
             
@@ -1097,10 +1128,11 @@
                 
                 container.innerHTML = Object.entries(employeeMonthlyData).map(([empName, monthData]) => {
                     let totalEmpComm = 0;
-                    const monthsList = Object.entries(monthData).map(([month, data]) => {
+                    const monthsList = Object.entries(monthData).filter(([month, data]) => selectedMonths.includes(month)).map(([month, data]) => {
                         totalEmpComm += data.totalComm;
                         return `<div style="padding: 12px; background: white; border-radius: 5px; margin-bottom: 8px; border-left: 3px solid var(--secondary);"><div style="font-weight: 600; color: var(--primary);">${month}</div><div style="font-size: 12px; color: #666; margin-top: 3px;">جلسات: ${data.count || data.subscribers.length}</div><div style="font-size: 12px; color: var(--secondary); font-weight: 600;">عمولة: ${data.totalComm.toFixed(2)} ريال</div></div>`;
                     }).join('');
+                    if (monthsList === '') return '';
                     return `<div style="background: linear-gradient(135deg, var(--primary), #003d99); color: white; padding: 20px; border-radius: 8px; margin-bottom: 15px;"><div style="font-size: 18px; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid var(--secondary); padding-bottom: 10px;">${empName}</div><div style="margin-bottom: 15px;">${monthsList}</div><div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; text-align: center;"><div style="font-size: 12px;">إجمالي العمولة</div><div style="font-size: 24px; font-weight: bold; color: var(--secondary);">${totalEmpComm.toFixed(2)} ريال</div></div></div>`;
                 }).join('');
             }

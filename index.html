@@ -232,7 +232,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        .section h2 {
+        .content h2 {
             color: var(--primary);
             margin-bottom: 20px;
             border-bottom: 2px solid var(--secondary);
@@ -254,66 +254,150 @@
             background: #ff1a1a;
         }
 
-        .subscriber-card {
+        /* ==================== LIST VIEW ==================== */
+        .subscribers-list {
+            display: none;
+        }
+
+        .subscribers-list.active {
+            display: block;
+        }
+
+        .subscriber-item {
             background: var(--light);
             border: 2px solid var(--border);
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .subscriber-header {
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 2px solid var(--secondary);
-            padding-bottom: 10px;
         }
 
-        .subscriber-info h3 {
+        .subscriber-item:hover {
+            border-color: var(--secondary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateX(-5px);
+        }
+
+        .subscriber-item-info h3 {
             color: var(--primary);
-            font-size: 18px;
+            font-size: 16px;
             margin-bottom: 5px;
         }
 
-        .subscriber-info p {
+        .subscriber-item-info p {
+            color: #666;
+            font-size: 13px;
+            margin: 2px 0;
+        }
+
+        .subscriber-item-arrow {
+            color: var(--secondary);
+            font-size: 20px;
+        }
+
+        /* ==================== DETAIL VIEW ==================== */
+        .subscriber-detail {
+            display: none;
+        }
+
+        .subscriber-detail.active {
+            display: block;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--secondary);
+        }
+
+        .detail-title h2 {
+            color: var(--primary);
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .detail-title p {
             color: #666;
             font-size: 14px;
-            margin: 3px 0;
         }
 
-        .subscriber-stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+        .detail-actions {
+            display: flex;
             gap: 10px;
-            margin-bottom: 15px;
         }
 
-        .stat-box {
-            background: white;
-            padding: 12px;
+        .btn-back {
+            background: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            border: none;
             border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-back:hover {
+            background: #003399;
+        }
+
+        .btn-delete {
+            background: var(--secondary);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-delete:hover {
+            background: #ff1a1a;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), #003d99);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
             text-align: center;
             border-left: 4px solid var(--secondary);
         }
 
         .stat-label {
-            color: #666;
-            font-size: 12px;
-            margin-bottom: 5px;
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 8px;
         }
 
         .stat-value {
-            color: var(--primary);
-            font-size: 20px;
+            font-size: 28px;
             font-weight: bold;
+        }
+
+        .sessions-section h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 16px;
         }
 
         .sessions-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            overflow-x: auto;
         }
 
         .sessions-table thead {
@@ -322,50 +406,32 @@
         }
 
         .sessions-table th {
-            padding: 10px;
+            padding: 12px 8px;
             text-align: center;
-            font-size: 12px;
+            font-size: 13px;
+            font-weight: 600;
         }
 
         .sessions-table td {
-            padding: 8px;
+            padding: 10px 8px;
             text-align: center;
             border-bottom: 1px solid var(--border);
         }
 
         .session-input {
             width: 100%;
-            padding: 6px;
+            padding: 8px;
             border: 1px solid var(--border);
-            border-radius: 3px;
+            border-radius: 4px;
             text-align: center;
-            font-size: 12px;
+            font-size: 13px;
+            font-family: inherit;
         }
 
         .session-input:focus {
             outline: none;
             border-color: var(--secondary);
             background: #fffacd;
-        }
-
-        .action-btn {
-            padding: 6px 12px;
-            margin: 0 3px;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .btn-delete {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .btn-save {
-            background: var(--success);
-            color: white;
         }
 
         /* ==================== MODAL ==================== */
@@ -428,17 +494,17 @@
         }
 
         @media (max-width: 768px) {
-            .subscriber-stats {
-                grid-template-columns: repeat(2, 1fr);
+            .stats-container {
+                grid-template-columns: 1fr;
             }
 
             .sessions-table {
-                font-size: 11px;
+                font-size: 12px;
             }
 
             .sessions-table th,
             .sessions-table td {
-                padding: 6px 2px;
+                padding: 8px 4px;
             }
         }
     </style>
@@ -513,9 +579,53 @@
 
             <!-- Content -->
             <div class="content">
-                <h2>👥 المشتركات وتتبع الجلسات</h2>
-                <button class="add-btn" onclick="openAddSubscriberModal()">+ إضافة مشتركة جديدة</button>
-                <div id="subscribersContainer"></div>
+                <!-- LIST VIEW -->
+                <div id="listView" class="subscribers-list active">
+                    <h2>👥 المشتركات</h2>
+                    <button class="add-btn" onclick="openAddSubscriberModal()">+ إضافة مشتركة جديدة</button>
+                    <div id="subscribersContainer"></div>
+                </div>
+
+                <!-- DETAIL VIEW -->
+                <div id="detailView" class="subscriber-detail">
+                    <div class="detail-header">
+                        <div class="detail-title">
+                            <h2 id="detailName">اسم المشتركة</h2>
+                            <p id="detailInfo">معلومات إضافية</p>
+                        </div>
+                        <div class="detail-actions">
+                            <button class="btn-back" onclick="backToList()">← رجوع</button>
+                            <button class="btn-delete" onclick="deleteCurrentSubscriber()">حذف</button>
+                        </div>
+                    </div>
+
+                    <div class="stats-container">
+                        <div class="stat-card">
+                            <div class="stat-label">الجلسات المنفذة</div>
+                            <div class="stat-value" id="completedCount">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">المبلغ المكتسب</div>
+                            <div class="stat-value" id="earnedAmount">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">العمولة (30%)</div>
+                            <div class="stat-value" id="commissionAmount">0</div>
+                        </div>
+                    </div>
+
+                    <div class="sessions-section">
+                        <h3>📅 تواريخ الجلسات</h3>
+                        <table class="sessions-table">
+                            <thead>
+                                <tr id="sessionsHeader"></tr>
+                            </thead>
+                            <tbody>
+                                <tr id="sessionsBody"></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -575,6 +685,8 @@
         const API_URL = window.location.origin + '/api';
         let currentUser = null;
         let token = null;
+        let allSubscribers = [];
+        let currentSubscriber = null;
 
         // Pricing data
         const pricing = {
@@ -586,10 +698,10 @@
         // Calculate commission
         function calculateCommission(sessions, completedSessions) {
             const price = pricing[sessions].price;
-            const priceAfterTax = price * 0.85; // Remove 15% tax
+            const priceAfterTax = price * 0.85;
             const pricePerSession = priceAfterTax / sessions;
             const totalEarned = pricePerSession * completedSessions;
-            const commission = totalEarned * 0.30; // 30% commission
+            const commission = totalEarned * 0.30;
             return {
                 pricePerSession: pricePerSession.toFixed(2),
                 totalEarned: totalEarned.toFixed(2),
@@ -684,14 +796,61 @@
             loadData();
         }
 
+        // ==================== NAVIGATION ====================
+        function showListView() {
+            document.getElementById('listView').classList.add('active');
+            document.getElementById('detailView').classList.remove('active');
+        }
+
+        function showDetailView(subscriber) {
+            currentSubscriber = subscriber;
+            const completedSessions = (subscriber.sessionDates || []).filter(d => d).length;
+            const calc = calculateCommission(subscriber.sessions, completedSessions);
+
+            document.getElementById('detailName').textContent = subscriber.name;
+            document.getElementById('detailInfo').textContent = `${subscriber.phone} • ${subscriber.month}`;
+            document.getElementById('completedCount').textContent = completedSessions;
+            document.getElementById('earnedAmount').textContent = calc.totalEarned;
+            document.getElementById('commissionAmount').textContent = calc.commission;
+
+            // Build sessions table
+            const headerRow = document.getElementById('sessionsHeader');
+            const bodyRow = document.getElementById('sessionsBody');
+            headerRow.innerHTML = '';
+            bodyRow.innerHTML = '';
+
+            for (let i = 0; i < subscriber.sessions; i++) {
+                const th = document.createElement('th');
+                th.textContent = `جلسة ${i + 1}`;
+                headerRow.appendChild(th);
+
+                const td = document.createElement('td');
+                const input = document.createElement('input');
+                input.type = 'date';
+                input.className = 'session-input';
+                input.value = subscriber.sessionDates && subscriber.sessionDates[i] ? subscriber.sessionDates[i] : '';
+                input.onchange = () => updateSessionDate(subscriber.id, i, input.value);
+                td.appendChild(input);
+                bodyRow.appendChild(td);
+            }
+
+            document.getElementById('listView').classList.remove('active');
+            document.getElementById('detailView').classList.add('active');
+        }
+
+        function backToList() {
+            showListView();
+            loadData();
+        }
+
         // ==================== DATA FUNCTIONS ====================
         async function loadData() {
             try {
                 const response = await fetch(`${API_URL}/data/subscribers`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-                const subscribers = await response.json();
-                renderSubscribers(subscribers);
+                allSubscribers = await response.json();
+                renderSubscribers(allSubscribers);
             } catch (error) {
                 console.error('Error loading data:', error);
             }
@@ -705,61 +864,16 @@
                 return;
             }
 
-            container.innerHTML = subscribers.map(s => {
-                const completedSessions = (s.sessionDates || []).filter(d => d).length;
-                const calc = calculateCommission(s.sessions, completedSessions);
-                
-                return `
-                    <div class="subscriber-card">
-                        <div class="subscriber-header">
-                            <div class="subscriber-info">
-                                <h3>${s.name}</h3>
-                                <p>📱 ${s.phone}</p>
-                                <p>📅 ${s.month}</p>
-                            </div>
-                            <button class="action-btn btn-delete" onclick="deleteSubscriber('${s.id}')">حذف</button>
-                        </div>
-
-                        <div class="subscriber-stats">
-                            <div class="stat-box">
-                                <div class="stat-label">إجمالي الجلسات</div>
-                                <div class="stat-value">${s.sessions}</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-label">الجلسات المنفذة</div>
-                                <div class="stat-value">${completedSessions}</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-label">المبلغ المكتسب</div>
-                                <div class="stat-value">${calc.totalEarned}</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-label">العمولة (30%)</div>
-                                <div class="stat-value">${calc.commission}</div>
-                            </div>
-                        </div>
-
-                        <table class="sessions-table">
-                            <thead>
-                                <tr>
-                                    ${Array.from({length: s.sessions}, (_, i) => `<th>جلسة ${i+1}</th>`).join('')}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    ${Array.from({length: s.sessions}, (_, i) => `
-                                        <td>
-                                            <input type="date" class="session-input" id="session-${s.id}-${i}" 
-                                                value="${s.sessionDates && s.sessionDates[i] ? s.sessionDates[i] : ''}"
-                                                onchange="updateSessionDate('${s.id}', ${i}, this.value)">
-                                        </td>
-                                    `).join('')}
-                                </tr>
-                            </tbody>
-                        </table>
+            container.innerHTML = subscribers.map(s => `
+                <div class="subscriber-item" onclick="showDetailView(${JSON.stringify(s).replace(/"/g, '&quot;')})">
+                    <div class="subscriber-item-info">
+                        <h3>${s.name}</h3>
+                        <p>📱 ${s.phone}</p>
+                        <p>📅 ${s.month} • ${s.sessions} جلسات</p>
                     </div>
-                `;
-            }).join('');
+                    <div class="subscriber-item-arrow">→</div>
+                </div>
+            `).join('');
         }
 
         async function updateSessionDate(subscriberId, sessionIndex, date) {
@@ -775,7 +889,12 @@
 
                 const data = await response.json();
                 if (data.success) {
-                    loadData();
+                    // Update current subscriber
+                    if (!currentSubscriber.sessionDates) {
+                        currentSubscriber.sessionDates = [];
+                    }
+                    currentSubscriber.sessionDates[sessionIndex] = date;
+                    showDetailView(currentSubscriber);
                 }
             } catch (error) {
                 console.error('Error updating session:', error);
@@ -824,8 +943,6 @@
         }
 
         async function deleteSubscriber(id) {
-            if (!confirm('هل تريد حذف هذه المشتركة؟')) return;
-
             try {
                 await fetch(`${API_URL}/data/subscribers/${id}`, {
                     method: 'DELETE',
@@ -835,6 +952,12 @@
             } catch (error) {
                 console.error('Error deleting subscriber:', error);
             }
+        }
+
+        function deleteCurrentSubscriber() {
+            if (!confirm('هل تريد حذف هذه المشتركة؟')) return;
+            deleteSubscriber(currentSubscriber.id);
+            backToList();
         }
 
         function openAddSubscriberModal() {

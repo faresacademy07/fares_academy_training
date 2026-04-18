@@ -1060,30 +1060,35 @@
                         <div class="month-commission-label">ريال سعودي</div>
                     </div>`).join('');
             } else {
-                // Admin: show employees with subscribers
-                const employeeData = {};
+                // Admin: show employees with monthly breakdown
+                const employeeMonthlyData = {};
                 allSubscribers.forEach(subscriber => {
                     const empName = subscriber.userName || 'Unknown';
-                    if (!employeeData[empName]) {
-                        employeeData[empName] = [];
+                    const month = subscriber.month;
+                    if (!employeeMonthlyData[empName]) {
+                        employeeMonthlyData[empName] = {};
                     }
-                    employeeData[empName].push(subscriber);
+                    if (!employeeMonthlyData[empName][month]) {
+                        employeeMonthlyData[empName][month] = { subscribers: [], totalComm: 0 };
+                    }
+                    const completed = (subscriber.sessionDates || []).filter(d => d).length;
+                    const calc = calculateCommission(subscriber.sessions, completed);
+                    employeeMonthlyData[empName][month].subscribers.push(subscriber);
+                    employeeMonthlyData[empName][month].totalComm += parseFloat(calc.commission);
                 });
                 
-                if (Object.keys(employeeData).length === 0) {
+                if (Object.keys(employeeMonthlyData).length === 0) {
                     container.innerHTML = '<p class="empty-message">لا توجد بيانات</p>';
                     return;
                 }
                 
-                container.innerHTML = Object.entries(employeeData).map(([empName, subs]) => {
-                    let totalComm = 0;
-                    const subsList = subs.map(s => {
-                        const completed = (s.sessionDates || []).filter(d => d).length;
-                        const calc = calculateCommission(s.sessions, completed);
-                        totalComm += parseFloat(calc.commission);
-                        return `<div style="padding: 10px; background: white; border-radius: 5px; margin-bottom: 8px; border-left: 3px solid var(--secondary);"><div style="font-weight: 600; color: var(--primary);">${s.name}</div><div style="font-size: 12px; color: #666; margin-top: 3px;">جلسات: ${completed}/${s.sessions}</div><div style="font-size: 12px; color: var(--secondary); font-weight: 600;">عمولة: ${calc.commission} ريال</div></div>`;
+                container.innerHTML = Object.entries(employeeMonthlyData).map(([empName, monthData]) => {
+                    let totalEmpComm = 0;
+                    const monthsList = Object.entries(monthData).map(([month, data]) => {
+                        totalEmpComm += data.totalComm;
+                        return `<div style="padding: 12px; background: white; border-radius: 5px; margin-bottom: 8px; border-left: 3px solid var(--secondary);"><div style="font-weight: 600; color: var(--primary);">${month}</div><div style="font-size: 12px; color: #666; margin-top: 3px;">مشتركات: ${data.subscribers.length}</div><div style="font-size: 12px; color: var(--secondary); font-weight: 600;">عمولة: ${data.totalComm.toFixed(2)} ريال</div></div>`;
                     }).join('');
-                    return `<div style="background: linear-gradient(135deg, var(--primary), #003d99); color: white; padding: 20px; border-radius: 8px; margin-bottom: 15px;"><div style="font-size: 18px; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid var(--secondary); padding-bottom: 10px;">${empName}</div><div style="margin-bottom: 15px;">${subsList}</div><div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; text-align: center;"><div style="font-size: 12px;">إجمالي العمولة</div><div style="font-size: 24px; font-weight: bold; color: var(--secondary);">${totalComm.toFixed(2)} ريال</div></div></div>`;
+                    return `<div style="background: linear-gradient(135deg, var(--primary), #003d99); color: white; padding: 20px; border-radius: 8px; margin-bottom: 15px;"><div style="font-size: 18px; font-weight: bold; margin-bottom: 15px; border-bottom: 2px solid var(--secondary); padding-bottom: 10px;">${empName}</div><div style="margin-bottom: 15px;">${monthsList}</div><div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; text-align: center;"><div style="font-size: 12px;">إجمالي العمولة</div><div style="font-size: 24px; font-weight: bold; color: var(--secondary);">${totalEmpComm.toFixed(2)} ريال</div></div></div>`;
                 }).join('');
             }
         }

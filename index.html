@@ -920,8 +920,9 @@
             document.getElementById('detailName').textContent = subscriber.name;
             document.getElementById('detailInfo').textContent = `${subscriber.phone} • ${subscriber.month}`;
             document.getElementById('completedCount').textContent = completedSessions;
-            document.getElementById('earnedAmount').textContent = calc.totalEarned;
-            document.getElementById('commissionAmount').textContent = calc.commission;
+            const totalPrice = calc.pricePerSession * subscriber.sessions;
+            document.getElementById('earnedAmount').textContent = totalPrice.toFixed(2) + ' ريال';
+            document.getElementById('commissionAmount').textContent = calc.commission.toFixed(2) + ' ريال';
 
             // Build sessions list (vertical)
             const container = document.getElementById('sessionsContainer');

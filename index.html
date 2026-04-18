@@ -17,6 +17,7 @@
             --light: #f5f5f5;
             --dark: #1a1a1a;
             --border: #ddd;
+            --success: #4CAF50;
         }
 
         body {
@@ -141,18 +142,6 @@
             transform: translateY(-2px);
         }
 
-        .toggle-form {
-            text-align: center;
-            margin-top: 20px;
-            color: var(--primary);
-        }
-
-        .toggle-form a {
-            color: var(--secondary);
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
         .error {
             color: var(--secondary);
             font-size: 14px;
@@ -237,59 +226,10 @@
         }
 
         .content {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 20px;
-        }
-
-        .sidebar {
             background: white;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            height: fit-content;
-        }
-
-        .sidebar h3 {
-            color: var(--primary);
-            margin-bottom: 15px;
-            border-bottom: 2px solid var(--secondary);
-            padding-bottom: 10px;
-        }
-
-        .nav-item {
-            padding: 10px 15px;
-            margin-bottom: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border-right: 3px solid transparent;
-        }
-
-        .nav-item:hover {
-            background: var(--light);
-            border-right-color: var(--secondary);
-        }
-
-        .nav-item.active {
-            background: var(--primary);
-            color: white;
-            border-right-color: var(--secondary);
-        }
-
-        .main-content {
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
         }
 
         .section h2 {
@@ -314,29 +254,102 @@
             background: #ff1a1a;
         }
 
-        .table {
-            width: 100%;
-            border-collapse: collapse;
+        .subscriber-card {
+            background: var(--light);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
             margin-bottom: 20px;
         }
 
-        .table thead {
+        .subscriber-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+
+        .subscriber-info h3 {
+            color: var(--primary);
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .subscriber-info p {
+            color: #666;
+            font-size: 14px;
+            margin: 3px 0;
+        }
+
+        .subscriber-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 12px;
+            border-radius: 5px;
+            text-align: center;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            color: var(--primary);
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .sessions-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+
+        .sessions-table thead {
             background: var(--primary);
             color: white;
         }
 
-        .table th, .table td {
-            padding: 12px;
-            text-align: right;
+        .sessions-table th {
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .sessions-table td {
+            padding: 8px;
+            text-align: center;
             border-bottom: 1px solid var(--border);
         }
 
-        .table tbody tr:hover {
-            background: var(--light);
+        .session-input {
+            width: 100%;
+            padding: 6px;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .session-input:focus {
+            outline: none;
+            border-color: var(--secondary);
+            background: #fffacd;
         }
 
         .action-btn {
-            padding: 5px 10px;
+            padding: 6px 12px;
             margin: 0 3px;
             border: none;
             border-radius: 3px;
@@ -345,18 +358,13 @@
             font-weight: 600;
         }
 
-        .btn-edit {
-            background: #4CAF50;
-            color: white;
-        }
-
         .btn-delete {
             background: var(--secondary);
             color: white;
         }
 
-        .btn-view {
-            background: var(--primary);
+        .btn-save {
+            background: var(--success);
             color: white;
         }
 
@@ -419,48 +427,18 @@
             justify-content: flex-end;
         }
 
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, var(--primary), #003d99);
-            color: white;
-            padding: 20px;
-            border-radius: 5px;
-            text-align: center;
-            border-left: 4px solid var(--secondary);
-        }
-
-        .stat-number {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
         @media (max-width: 768px) {
-            .content {
-                grid-template-columns: 1fr;
+            .subscriber-stats {
+                grid-template-columns: repeat(2, 1fr);
             }
 
-            .stats {
-                grid-template-columns: 1fr;
+            .sessions-table {
+                font-size: 11px;
             }
 
-            .table {
-                font-size: 12px;
-            }
-
-            .table th, .table td {
-                padding: 8px;
+            .sessions-table th,
+            .sessions-table td {
+                padding: 6px 2px;
             }
         }
     </style>
@@ -535,95 +513,14 @@
 
             <!-- Content -->
             <div class="content">
-                <!-- Sidebar -->
-                <div class="sidebar">
-                    <h3>القائمة</h3>
-                    <div class="nav-item active" onclick="switchSection('dashboard')">📊 لوحة التحكم</div>
-                    <div class="nav-item" onclick="switchSection('subscribers')">👥 المشتركات</div>
-                    <div class="nav-item" onclick="switchSection('programs')">📋 البرامج التدريبية</div>
-                    <div class="nav-item" onclick="switchSection('measurements')">📏 القياسات</div>
-                </div>
-
-                <!-- Main Content -->
-                <div class="main-content">
-                    <!-- Dashboard Section -->
-                    <div id="dashboard" class="section active">
-                        <h2>📊 لوحة التحكم</h2>
-                        <div class="stats">
-                            <div class="stat-card">
-                                <div class="stat-number" id="totalSubscribers">0</div>
-                                <div class="stat-label">إجمالي المشتركات</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number" id="totalPrograms">0</div>
-                                <div class="stat-label">البرامج التدريبية</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number" id="totalMeasurements">0</div>
-                                <div class="stat-label">القياسات المسجلة</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Subscribers Section -->
-                    <div id="subscribers" class="section">
-                        <h2>👥 المشتركات</h2>
-                        <button class="add-btn" onclick="openAddSubscriberModal()">+ إضافة مشتركة جديدة</button>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>الإجراءات</th>
-                                    <th>شهر الاشتراك</th>
-                                    <th>عدد الجلسات</th>
-                                    <th>رقم الجوال</th>
-                                    <th>الاسم</th>
-                                </tr>
-                            </thead>
-                            <tbody id="subscribersTable">
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Programs Section -->
-                    <div id="programs" class="section">
-                        <h2>📋 البرامج التدريبية</h2>
-                        <button class="add-btn" onclick="openAddProgramModal()">+ إضافة برنامج جديد</button>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>الإجراءات</th>
-                                    <th>عدد التمارين</th>
-                                    <th>المشتركة</th>
-                                    <th>اسم البرنامج</th>
-                                </tr>
-                            </thead>
-                            <tbody id="programsTable">
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- Measurements Section -->
-                    <div id="measurements" class="section">
-                        <h2>📏 القياسات</h2>
-                        <button class="add-btn" onclick="openAddMeasurementModal()">+ إضافة قياس جديد</button>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>التاريخ</th>
-                                    <th>الوزن</th>
-                                    <th>المشتركة</th>
-                                </tr>
-                            </thead>
-                            <tbody id="measurementsTable">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <h2>👥 المشتركات وتتبع الجلسات</h2>
+                <button class="add-btn" onclick="openAddSubscriberModal()">+ إضافة مشتركة جديدة</button>
+                <div id="subscribersContainer"></div>
             </div>
         </div>
     </div>
 
-    <!-- Modals will be added here -->
+    <!-- Add Subscriber Modal -->
     <div id="addSubscriberModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -641,7 +538,12 @@
                 </div>
                 <div class="form-group">
                     <label>عدد الجلسات</label>
-                    <input type="number" id="subscriberSessions" placeholder="عدد الجلسات" min="1">
+                    <select id="subscriberSessions" style="width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 5px; font-size: 14px;">
+                        <option value="">اختر عدد الجلسات</option>
+                        <option value="6">6 جلسات - 1400 ر.س</option>
+                        <option value="12">12 جلسة - 2200 ر.س</option>
+                        <option value="24">24 جلسة - 4000 ر.س</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label>شهر الاشتراك</label>
@@ -673,6 +575,27 @@
         const API_URL = window.location.origin + '/api';
         let currentUser = null;
         let token = null;
+
+        // Pricing data
+        const pricing = {
+            6: { price: 1400, label: '6 جلسات' },
+            12: { price: 2200, label: '12 جلسة' },
+            24: { price: 4000, label: '24 جلسة' }
+        };
+
+        // Calculate commission
+        function calculateCommission(sessions, completedSessions) {
+            const price = pricing[sessions].price;
+            const priceAfterTax = price * 0.85; // Remove 15% tax
+            const pricePerSession = priceAfterTax / sessions;
+            const totalEarned = pricePerSession * completedSessions;
+            const commission = totalEarned * 0.30; // 30% commission
+            return {
+                pricePerSession: pricePerSession.toFixed(2),
+                totalEarned: totalEarned.toFixed(2),
+                commission: commission.toFixed(2)
+            };
+        }
 
         // ==================== AUTH FUNCTIONS ====================
         function toggleForm() {
@@ -764,73 +687,105 @@
         // ==================== DATA FUNCTIONS ====================
         async function loadData() {
             try {
-                const [subscribers, programs, measurements] = await Promise.all([
-                    fetch(`${API_URL}/data/subscribers`, { headers: { 'Authorization': `Bearer ${token}` } }).then(r => r.json()),
-                    fetch(`${API_URL}/data/programs`, { headers: { 'Authorization': `Bearer ${token}` } }).then(r => r.json()),
-                    fetch(`${API_URL}/data/measurements`, { headers: { 'Authorization': `Bearer ${token}` } }).then(r => r.json())
-                ]);
-
+                const response = await fetch(`${API_URL}/data/subscribers`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const subscribers = await response.json();
                 renderSubscribers(subscribers);
-                renderPrograms(programs);
-                renderMeasurements(measurements);
-                updateStats(subscribers, programs, measurements);
             } catch (error) {
                 console.error('Error loading data:', error);
             }
         }
 
-        function updateStats(subscribers, programs, measurements) {
-            document.getElementById('totalSubscribers').textContent = subscribers.length;
-            document.getElementById('totalPrograms').textContent = programs.length;
-            document.getElementById('totalMeasurements').textContent = measurements.length;
-        }
-
         function renderSubscribers(subscribers) {
-            const tbody = document.getElementById('subscribersTable');
-            tbody.innerHTML = subscribers.map(s => `
-                <tr>
-                    <td>
-                        <button class="action-btn btn-edit" onclick="editSubscriber('${s.id}')">تعديل</button>
-                        <button class="action-btn btn-delete" onclick="deleteSubscriber('${s.id}')">حذف</button>
-                    </td>
-                    <td>${s.month || '-'}</td>
-                    <td>${s.sessions || '-'}</td>
-                    <td>${s.phone || '-'}</td>
-                    <td>${s.name}</td>
-                </tr>
-            `).join('');
+            const container = document.getElementById('subscribersContainer');
+            
+            if (subscribers.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">لا توجد مشتركات حالياً</p>';
+                return;
+            }
+
+            container.innerHTML = subscribers.map(s => {
+                const completedSessions = (s.sessionDates || []).filter(d => d).length;
+                const calc = calculateCommission(s.sessions, completedSessions);
+                
+                return `
+                    <div class="subscriber-card">
+                        <div class="subscriber-header">
+                            <div class="subscriber-info">
+                                <h3>${s.name}</h3>
+                                <p>📱 ${s.phone}</p>
+                                <p>📅 ${s.month}</p>
+                            </div>
+                            <button class="action-btn btn-delete" onclick="deleteSubscriber('${s.id}')">حذف</button>
+                        </div>
+
+                        <div class="subscriber-stats">
+                            <div class="stat-box">
+                                <div class="stat-label">إجمالي الجلسات</div>
+                                <div class="stat-value">${s.sessions}</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-label">الجلسات المنفذة</div>
+                                <div class="stat-value">${completedSessions}</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-label">المبلغ المكتسب</div>
+                                <div class="stat-value">${calc.totalEarned}</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-label">العمولة (30%)</div>
+                                <div class="stat-value">${calc.commission}</div>
+                            </div>
+                        </div>
+
+                        <table class="sessions-table">
+                            <thead>
+                                <tr>
+                                    ${Array.from({length: s.sessions}, (_, i) => `<th>جلسة ${i+1}</th>`).join('')}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    ${Array.from({length: s.sessions}, (_, i) => `
+                                        <td>
+                                            <input type="date" class="session-input" id="session-${s.id}-${i}" 
+                                                value="${s.sessionDates && s.sessionDates[i] ? s.sessionDates[i] : ''}"
+                                                onchange="updateSessionDate('${s.id}', ${i}, this.value)">
+                                        </td>
+                                    `).join('')}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }).join('');
         }
 
-        function renderPrograms(programs) {
-            const tbody = document.getElementById('programsTable');
-            tbody.innerHTML = programs.map(p => `
-                <tr>
-                    <td>
-                        <button class="action-btn btn-view" onclick="viewProgram('${p.id}')">عرض</button>
-                        <button class="action-btn btn-delete" onclick="deleteProgram('${p.id}')">حذف</button>
-                    </td>
-                    <td>${p.exercises ? p.exercises.length : 0}</td>
-                    <td>${p.subscriberName || '-'}</td>
-                    <td>${p.name}</td>
-                </tr>
-            `).join('');
-        }
+        async function updateSessionDate(subscriberId, sessionIndex, date) {
+            try {
+                const response = await fetch(`${API_URL}/data/subscribers/${subscriberId}/session`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ sessionIndex, date })
+                });
 
-        function renderMeasurements(measurements) {
-            const tbody = document.getElementById('measurementsTable');
-            tbody.innerHTML = measurements.map(m => `
-                <tr>
-                    <td>${new Date(m.createdAt).toLocaleDateString('ar-SA')}</td>
-                    <td>${m.weight} كغ</td>
-                    <td>${m.subscriberName || '-'}</td>
-                </tr>
-            `).join('');
+                const data = await response.json();
+                if (data.success) {
+                    loadData();
+                }
+            } catch (error) {
+                console.error('Error updating session:', error);
+            }
         }
 
         async function addSubscriber() {
             const name = document.getElementById('subscriberName').value;
             const phone = document.getElementById('subscriberPhone').value;
-            const sessions = parseInt(document.getElementById('subscriberSessions').value);
+            const sessions = document.getElementById('subscriberSessions').value;
             const month = document.getElementById('subscriberMonth').value;
 
             if (!name || !phone || !sessions || !month) {
@@ -845,7 +800,13 @@
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${token}`
                     },
-                    body: JSON.stringify({ name, phone, sessions, month })
+                    body: JSON.stringify({ 
+                        name, 
+                        phone, 
+                        sessions: parseInt(sessions), 
+                        month,
+                        sessionDates: Array(parseInt(sessions)).fill('')
+                    })
                 });
 
                 const data = await response.json();
@@ -876,40 +837,12 @@
             }
         }
 
-        function switchSection(sectionId) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
-            event.target.classList.add('active');
-        }
-
         function openAddSubscriberModal() {
             document.getElementById('addSubscriberModal').classList.add('active');
         }
 
-        function openAddProgramModal() {
-            alert('سيتم إضافة هذه الميزة قريباً');
-        }
-
-        function openAddMeasurementModal() {
-            alert('سيتم إضافة هذه الميزة قريباً');
-        }
-
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('active');
-        }
-
-        function editSubscriber(id) {
-            alert('سيتم إضافة هذه الميزة قريباً');
-        }
-
-        function viewProgram(id) {
-            alert('سيتم إضافة هذه الميزة قريباً');
-        }
-
-        function deleteProgram(id) {
-            if (!confirm('هل تريد حذف هذا البرنامج؟')) return;
-            alert('سيتم إضافة هذه الميزة قريباً');
         }
 
         // ==================== INIT ====================
@@ -917,7 +850,6 @@
             const savedToken = localStorage.getItem('token');
             if (savedToken) {
                 token = savedToken;
-                // Verify token by fetching user info
                 fetch(`${API_URL}/auth/me`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }).then(r => r.json()).then(data => {

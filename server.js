@@ -192,83 +192,25 @@ app.delete('/api/data/subscribers/:id', verifyToken, (req, res) => {
     res.json({ success: true });
 });
 
-// POST /api/data/programs - Add program
-app.post('/api/data/programs', verifyToken, (req, res) => {
-    const db = readDatabase();
-    if (!db.data[req.userId]) {
-        db.data[req.userId] = { subscribers: [], programs: [], measurements: [] };
-    }
-    
-    const program = {
-        id: Date.now().toString(),
-        ...req.body,
-        createdAt: new Date().toISOString()
-    };
-    
-    db.data[req.userId].programs.push(program);
-    writeDatabase(db);
-    res.json({ success: true, program });
-});
-
-// GET /api/data/programs - Get all programs
-app.get('/api/data/programs', verifyToken, (req, res) => {
-    const db = readDatabase();
-    const programs = db.data[req.userId]?.programs || [];
-    res.json(programs);
-});
-
-// PUT /api/data/programs/:id - Update program
-app.put('/api/data/programs/:id', verifyToken, (req, res) => {
+// PUT /api/data/subscribers/:id/session - Update session date
+app.put('/api/data/subscribers/:id/session', verifyToken, (req, res) => {
     const db = readDatabase();
     if (!db.data[req.userId]) {
         return res.status(404).json({ success: false, error: 'No data found' });
     }
     
-    const index = db.data[req.userId].programs.findIndex(p => p.id === req.params.id);
+    const { sessionIndex, date } = req.body;
+    const index = db.data[req.userId].subscribers.findIndex(s => s.id === req.params.id);
     if (index !== -1) {
-        db.data[req.userId].programs[index] = { ...db.data[req.userId].programs[index], ...req.body };
+        if (!db.data[req.userId].subscribers[index].sessionDates) {
+            db.data[req.userId].subscribers[index].sessionDates = [];
+        }
+        db.data[req.userId].subscribers[index].sessionDates[sessionIndex] = date;
         writeDatabase(db);
-        res.json({ success: true, program: db.data[req.userId].programs[index] });
+        res.json({ success: true });
     } else {
-        res.status(404).json({ success: false, error: 'Program not found' });
+        res.status(404).json({ success: false, error: 'Subscriber not found' });
     }
-});
-
-// DELETE /api/data/programs/:id - Delete program
-app.delete('/api/data/programs/:id', verifyToken, (req, res) => {
-    const db = readDatabase();
-    if (!db.data[req.userId]) {
-        return res.status(404).json({ success: false, error: 'No data found' });
-    }
-    
-    db.data[req.userId].programs = db.data[req.userId].programs.filter(p => p.id !== req.params.id);
-    writeDatabase(db);
-    res.json({ success: true });
-});
-
-// POST /api/data/measurements - Add measurement
-app.post('/api/data/measurements', verifyToken, (req, res) => {
-    const db = readDatabase();
-    if (!db.data[req.userId]) {
-        db.data[req.userId] = { subscribers: [], programs: [], measurements: [] };
-    }
-    
-    const measurement = {
-        id: Date.now().toString(),
-        ...req.body,
-        createdAt: new Date().toISOString()
-    };
-    
-    db.data[req.userId].measurements.push(measurement);
-    writeDatabase(db);
-    res.json({ success: true, measurement });
-});
-
-// GET /api/data/measurements - Get all measurements
-app.get('/api/data/measurements', verifyToken, (req, res) => {
-    const db = readDatabase();
-    const measurements = db.data[req.userId]?.measurements || [];
-    res.json(measurements);
 });
 
 // Health check

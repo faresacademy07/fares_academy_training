@@ -232,6 +232,34 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            color: #999;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            color: var(--secondary);
+            border-bottom-color: var(--secondary);
+        }
+
+        .tab-btn:hover {
+            color: var(--primary);
+        }
+
         .content h2 {
             color: var(--primary);
             margin-bottom: 20px;
@@ -397,7 +425,6 @@
         .sessions-table {
             width: 100%;
             border-collapse: collapse;
-            overflow-x: auto;
         }
 
         .sessions-table thead {
@@ -418,8 +445,24 @@
             border-bottom: 1px solid var(--border);
         }
 
+        .session-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: var(--light);
+            border-radius: 5px;
+        }
+
+        .session-label {
+            font-weight: 600;
+            color: var(--primary);
+            min-width: 80px;
+        }
+
         .session-input {
-            width: 100%;
+            flex: 1;
             padding: 8px;
             border: 1px solid var(--border);
             border-radius: 4px;
@@ -432,6 +475,52 @@
             outline: none;
             border-color: var(--secondary);
             background: #fffacd;
+        }
+
+        /* ==================== DASHBOARD ==================== */
+        .dashboard-view {
+            display: none;
+        }
+
+        .dashboard-view.active {
+            display: block;
+        }
+
+        .monthly-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .month-card {
+            background: linear-gradient(135deg, var(--primary), #003d99);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .month-name {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .month-commission {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .month-commission-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 40px 20px;
         }
 
         /* ==================== MODAL ==================== */
@@ -498,13 +587,13 @@
                 grid-template-columns: 1fr;
             }
 
-            .sessions-table {
-                font-size: 12px;
+            .session-row {
+                flex-direction: column;
+                align-items: stretch;
             }
 
-            .sessions-table th,
-            .sessions-table td {
-                padding: 8px 4px;
+            .session-label {
+                min-width: auto;
             }
         }
     </style>
@@ -579,11 +668,22 @@
 
             <!-- Content -->
             <div class="content">
+                <!-- TABS -->
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('list')">👥 المشتركات</button>
+                    <button class="tab-btn" onclick="switchTab('dashboard')">📊 لوحة التحكم</button>
+                </div>
+
                 <!-- LIST VIEW -->
                 <div id="listView" class="subscribers-list active">
-                    <h2>👥 المشتركات</h2>
                     <button class="add-btn" onclick="openAddSubscriberModal()">+ إضافة مشتركة جديدة</button>
                     <div id="subscribersContainer"></div>
+                </div>
+
+                <!-- DASHBOARD VIEW -->
+                <div id="dashboardView" class="dashboard-view">
+                    <h2>📊 ملخص العمولات الشهرية</h2>
+                    <div class="monthly-summary" id="monthlySummary"></div>
                 </div>
 
                 <!-- DETAIL VIEW -->
@@ -616,14 +716,7 @@
 
                     <div class="sessions-section">
                         <h3>📅 تواريخ الجلسات</h3>
-                        <table class="sessions-table">
-                            <thead>
-                                <tr id="sessionsHeader"></tr>
-                            </thead>
-                            <tbody>
-                                <tr id="sessionsBody"></tr>
-                            </tbody>
-                        </table>
+                        <div id="sessionsContainer"></div>
                     </div>
                 </div>
             </div>
@@ -797,9 +890,20 @@
         }
 
         // ==================== NAVIGATION ====================
-        function showListView() {
-            document.getElementById('listView').classList.add('active');
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('listView').classList.remove('active');
+            document.getElementById('dashboardView').classList.remove('active');
             document.getElementById('detailView').classList.remove('active');
+
+            if (tab === 'list') {
+                document.getElementById('listView').classList.add('active');
+            } else if (tab === 'dashboard') {
+                document.getElementById('dashboardView').classList.add('active');
+                renderDashboard();
+            }
         }
 
         function showDetailView(subscriber) {
@@ -813,33 +917,37 @@
             document.getElementById('earnedAmount').textContent = calc.totalEarned;
             document.getElementById('commissionAmount').textContent = calc.commission;
 
-            // Build sessions table
-            const headerRow = document.getElementById('sessionsHeader');
-            const bodyRow = document.getElementById('sessionsBody');
-            headerRow.innerHTML = '';
-            bodyRow.innerHTML = '';
+            // Build sessions list (vertical)
+            const container = document.getElementById('sessionsContainer');
+            container.innerHTML = '';
 
             for (let i = 0; i < subscriber.sessions; i++) {
-                const th = document.createElement('th');
-                th.textContent = `جلسة ${i + 1}`;
-                headerRow.appendChild(th);
-
-                const td = document.createElement('td');
+                const row = document.createElement('div');
+                row.className = 'session-row';
+                
+                const label = document.createElement('div');
+                label.className = 'session-label';
+                label.textContent = `جلسة ${i + 1}`;
+                
                 const input = document.createElement('input');
                 input.type = 'date';
                 input.className = 'session-input';
                 input.value = subscriber.sessionDates && subscriber.sessionDates[i] ? subscriber.sessionDates[i] : '';
                 input.onchange = () => updateSessionDate(subscriber.id, i, input.value);
-                td.appendChild(input);
-                bodyRow.appendChild(td);
+                
+                row.appendChild(label);
+                row.appendChild(input);
+                container.appendChild(row);
             }
 
             document.getElementById('listView').classList.remove('active');
+            document.getElementById('dashboardView').classList.remove('active');
             document.getElementById('detailView').classList.add('active');
         }
 
         function backToList() {
-            showListView();
+            document.getElementById('listView').classList.add('active');
+            document.getElementById('detailView').classList.remove('active');
             loadData();
         }
 
@@ -860,7 +968,7 @@
             const container = document.getElementById('subscribersContainer');
             
             if (subscribers.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #999; padding: 20px;">لا توجد مشتركات حالياً</p>';
+                container.innerHTML = '<p class="empty-message">لا توجد مشتركات حالياً</p>';
                 return;
             }
 
@@ -872,6 +980,36 @@
                         <p>📅 ${s.month} • ${s.sessions} جلسات</p>
                     </div>
                     <div class="subscriber-item-arrow">→</div>
+                </div>
+            `).join('');
+        }
+
+        function renderDashboard() {
+            const monthlyData = {};
+
+            // Group by month
+            allSubscribers.forEach(subscriber => {
+                const month = subscriber.month;
+                if (!monthlyData[month]) {
+                    monthlyData[month] = 0;
+                }
+                const completedSessions = (subscriber.sessionDates || []).filter(d => d).length;
+                const calc = calculateCommission(subscriber.sessions, completedSessions);
+                monthlyData[month] += parseFloat(calc.commission);
+            });
+
+            const container = document.getElementById('monthlySummary');
+            
+            if (Object.keys(monthlyData).length === 0) {
+                container.innerHTML = '<p class="empty-message">لا توجد بيانات</p>';
+                return;
+            }
+
+            container.innerHTML = Object.entries(monthlyData).map(([month, commission]) => `
+                <div class="month-card">
+                    <div class="month-name">${month}</div>
+                    <div class="month-commission">${commission.toFixed(2)}</div>
+                    <div class="month-commission-label">ريال سعودي</div>
                 </div>
             `).join('');
         }
@@ -889,7 +1027,6 @@
 
                 const data = await response.json();
                 if (data.success) {
-                    // Update current subscriber
                     if (!currentSubscriber.sessionDates) {
                         currentSubscriber.sessionDates = [];
                     }

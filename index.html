@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة التدريب الشخصي - Fares Academy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #001a4d;
+            --secondary: #ff3333;
+            --light: #f5f5f5;
+            --dark: #1a1a1a;
+            --border: #ddd;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, #003d99 100%);
+            color: var(--dark);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ==================== LOGIN SCREEN ==================== */
+        .auth-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary) 0%, #003d99 100%);
+        }
+
+        .auth-card {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo-box {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), #003d99);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            border: 3px solid var(--secondary);
+        }
+
+        .logo-text {
+            color: var(--secondary);
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        .auth-logo h1 {
+            color: var(--primary);
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .auth-logo p {
+            color: var(--secondary);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--secondary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #003d99);
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 26, 77, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #ff1a1a;
+            transform: translateY(-2px);
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--primary);
+        }
+
+        .toggle-form a {
+            color: var(--secondary);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .error {
+            color: var(--secondary);
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* ==================== MAIN APP ==================== */
+        .app-screen {
+            display: none;
+        }
+
+        .header {
+            background: white;
+            padding: 15px 20px;
+            border-bottom: 3px solid var(--secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), #003d99);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary);
+            font-weight: bold;
+            border: 2px solid var(--secondary);
+        }
+
+        .header-title h1 {
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            text-align: right;
+            color: var(--primary);
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .btn-logout {
+            background: var(--secondary);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-logout:hover {
+            background: #ff1a1a;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+
+        .nav-item {
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-right: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--light);
+            border-right-color: var(--secondary);
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+            border-right-color: var(--secondary);
+        }
+
+        .main-content {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+
+        .add-btn {
+            background: var(--secondary);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .add-btn:hover {
+            background: #ff1a1a;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .table thead {
+            background: var(--primary);
+            color: white;
+        }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .table tbody tr:hover {
+            background: var(--light);
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            margin: 0 3px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .btn-edit {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-delete {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-view {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ==================== MODAL ==================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+
+        .modal-header h3 {
+            color: var(--primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--secondary);
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), #003d99);
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .table {
+                font-size: 12px;
+            }
+
+            .table th, .table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ==================== AUTH SCREEN ==================== -->
+    <div id="authScreen" class="auth-screen">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <div class="logo-box">
+                    <div class="logo-text">FA</div>
+                </div>
+                <h1>إدارة التدريب الشخصي</h1>
+                <p>Fares Academy</p>
+            </div>
+
+            <!-- Login Form -->
+            <div id="loginForm">
+                <h2 style="text-align: center; color: var(--primary); margin-bottom: 20px;">تسجيل الدخول</h2>
+                <div class="form-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="loginEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••">
+                </div>
+                <button class="btn btn-primary" onclick="handleLogin()">دخول</button>
+                <button class="btn btn-secondary" onclick="toggleForm()">إنشاء حساب جديد</button>
+                <div id="loginError" class="error"></div>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerForm" style="display: none;">
+                <h2 style="text-align: center; color: var(--primary); margin-bottom: 20px;">إنشاء حساب جديد</h2>
+                <div class="form-group">
+                    <label>الاسم</label>
+                    <input type="text" id="registerName" placeholder="اسمك">
+                </div>
+                <div class="form-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="registerEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="registerPassword" placeholder="••••••••">
+                </div>
+                <button class="btn btn-primary" onclick="handleRegister()">إنشاء الحساب</button>
+                <button class="btn btn-secondary" onclick="toggleForm()">لديّ حساب بالفعل</button>
+                <div id="registerError" class="error"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== APP SCREEN ==================== -->
+    <div id="appScreen" class="app-screen">
+        <div class="container">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-title">
+                    <div class="header-logo">FA</div>
+                    <h1>إدارة التدريب الشخصي</h1>
+                </div>
+                <div class="header-user">
+                    <div class="user-info">
+                        <div class="user-name" id="userName">المستخدم</div>
+                        <div class="user-email" id="userEmail">email@example.com</div>
+                    </div>
+                    <button class="btn-logout" onclick="handleLogout()">تسجيل الخروج</button>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="content">
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <h3>القائمة</h3>
+                    <div class="nav-item active" onclick="switchSection('dashboard')">📊 لوحة التحكم</div>
+                    <div class="nav-item" onclick="switchSection('subscribers')">👥 المشتركات</div>
+                    <div class="nav-item" onclick="switchSection('programs')">📋 البرامج التدريبية</div>
+                    <div class="nav-item" onclick="switchSection('measurements')">📏 القياسات</div>
+                </div>
+
+                <!-- Main Content -->
+                <div class="main-content">
+                    <!-- Dashboard Section -->
+                    <div id="dashboard" class="section active">
+                        <h2>📊 لوحة التحكم</h2>
+                        <div class="stats">
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalSubscribers">0</div>
+                                <div class="stat-label">إجمالي المشتركات</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalPrograms">0</div>
+                                <div class="stat-label">البرامج التدريبية</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="totalMeasurements">0</div>
+                                <div class="stat-label">القياسات المسجلة</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subscribers Section -->
+                    <div id="subscribers" class="section">
+                        <h2>👥 المشتركات</h2>
+                        <button class="add-btn" onclick="openAddSubscriberModal()">+ إضافة مشتركة جديدة</button>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>الإجراءات</th>
+                                    <th>الحالة الصحية</th>
+                                    <th>الهدف</th>
+                                    <th>الاسم</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subscribersTable">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Programs Section -->
+                    <div id="programs" class="section">
+                        <h2>📋 البرامج التدريبية</h2>
+                        <button class="add-btn" onclick="openAddProgramModal()">+ إضافة برنامج جديد</button>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>الإجراءات</th>
+                                    <th>عدد التمارين</th>
+                                    <th>المشتركة</th>
+                                    <th>اسم البرنامج</th>
+                                </tr>
+                            </thead>
+                            <tbody id="programsTable">
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Measurements Section -->
+                    <div id="measurements" class="section">
+                        <h2>📏 القياسات</h2>
+                        <button class="add-btn" onclick="openAddMeasurementModal()">+ إضافة قياس جديد</button>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>التاريخ</th>
+                                    <th>الوزن</th>
+                                    <th>المشتركة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="measurementsTable">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals will be added here -->
+    <div id="addSubscriberModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>إضافة مشتركة جديدة</h3>
+                <button class="close-btn" onclick="closeModal('addSubscriberModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>الاسم</label>
+                    <input type="text" id="subscriberName" placeholder="اسم المشتركة">
+                </div>
+                <div class="form-group">
+                    <label>رقم الجوال</label>
+                    <input type="tel" id="subscriberPhone" placeholder="رقم الجوال">
+                </div>
+                <div class="form-group">
+                    <label>الهدف</label>
+                    <input type="text" id="subscriberGoal" placeholder="الهدف من التدريب">
+                </div>
+                <div class="form-group">
+                    <label>الحالة الصحية</label>
+                    <input type="text" id="subscriberHealth" placeholder="أي إصابات أو حالات صحية">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('addSubscriberModal')">إلغاء</button>
+                <button class="btn btn-primary" onclick="addSubscriber()">حفظ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = window.location.origin + '/api';
+        let currentUser = null;
+        let token = null;
+
+        // ==================== AUTH FUNCTIONS ====================
+        function toggleForm() {
+            document.getElementById('loginForm').style.display = 
+                document.getElementById('loginForm').style.display === 'none' ? 'block' : 'none';
+            document.getElementById('registerForm').style.display = 
+                document.getElementById('registerForm').style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                document.getElementById('loginError').textContent = 'يرجى ملء جميع الحقول';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    token = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('token', token);
+                    showApp();
+                } else {
+                    document.getElementById('loginError').textContent = data.error || 'خطأ في تسجيل الدخول';
+                }
+            } catch (error) {
+                document.getElementById('loginError').textContent = 'خطأ في الاتصال بالخادم';
+            }
+        }
+
+        async function handleRegister() {
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+
+            if (!name || !email || !password) {
+                document.getElementById('registerError').textContent = 'يرجى ملء جميع الحقول';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    token = data.token;
+                    currentUser = data.user;
+                    localStorage.setItem('token', token);
+                    showApp();
+                } else {
+                    document.getElementById('registerError').textContent = data.error || 'خطأ في إنشاء الحساب';
+                }
+            } catch (error) {
+                document.getElementById('registerError').textContent = 'خطأ في الاتصال بالخادم';
+            }
+        }
+
+        function handleLogout() {
+            token = null;
+            currentUser = null;
+            localStorage.removeItem('token');
+            document.getElementById('authScreen').style.display = 'flex';
+            document.getElementById('appScreen').style.display = 'none';
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        function showApp() {
+            document.getElementById('authScreen').style.display = 'none';
+            document.getElementById('appScreen').style.display = 'block';
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userEmail').textContent = currentUser.email;
+            loadData();
+        }
+
+        // ==================== DATA FUNCTIONS ====================
+        async function loadData() {
+            try {
+                const [subscribers, programs, measurements] = await Promise.all([
+                    fetch(`${API_URL}/data/subscribers`, { headers: { 'Authorization': `Bearer ${token}` } }).then(r => r.json()),
+                    fetch(`${API_URL}/data/programs`, { headers: { 'Authorization': `Bearer ${token}` } }).then(r => r.json()),
+                    fetch(`${API_URL}/data/measurements`, { headers: { 'Authorization': `Bearer ${token}` } }).then(r => r.json())
+                ]);
+
+                renderSubscribers(subscribers);
+                renderPrograms(programs);
+                renderMeasurements(measurements);
+                updateStats(subscribers, programs, measurements);
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        function updateStats(subscribers, programs, measurements) {
+            document.getElementById('totalSubscribers').textContent = subscribers.length;
+            document.getElementById('totalPrograms').textContent = programs.length;
+            document.getElementById('totalMeasurements').textContent = measurements.length;
+        }
+
+        function renderSubscribers(subscribers) {
+            const tbody = document.getElementById('subscribersTable');
+            tbody.innerHTML = subscribers.map(s => `
+                <tr>
+                    <td>
+                        <button class="action-btn btn-edit" onclick="editSubscriber('${s.id}')">تعديل</button>
+                        <button class="action-btn btn-delete" onclick="deleteSubscriber('${s.id}')">حذف</button>
+                    </td>
+                    <td>${s.health || '-'}</td>
+                    <td>${s.goal || '-'}</td>
+                    <td>${s.name}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderPrograms(programs) {
+            const tbody = document.getElementById('programsTable');
+            tbody.innerHTML = programs.map(p => `
+                <tr>
+                    <td>
+                        <button class="action-btn btn-view" onclick="viewProgram('${p.id}')">عرض</button>
+                        <button class="action-btn btn-delete" onclick="deleteProgram('${p.id}')">حذف</button>
+                    </td>
+                    <td>${p.exercises ? p.exercises.length : 0}</td>
+                    <td>${p.subscriberName || '-'}</td>
+                    <td>${p.name}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderMeasurements(measurements) {
+            const tbody = document.getElementById('measurementsTable');
+            tbody.innerHTML = measurements.map(m => `
+                <tr>
+                    <td>${new Date(m.createdAt).toLocaleDateString('ar-SA')}</td>
+                    <td>${m.weight} كغ</td>
+                    <td>${m.subscriberName || '-'}</td>
+                </tr>
+            `).join('');
+        }
+
+        async function addSubscriber() {
+            const name = document.getElementById('subscriberName').value;
+            const phone = document.getElementById('subscriberPhone').value;
+            const goal = document.getElementById('subscriberGoal').value;
+            const health = document.getElementById('subscriberHealth').value;
+
+            if (!name) {
+                alert('يرجى إدخال اسم المشتركة');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/data/subscribers`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ name, phone, goal, health })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    closeModal('addSubscriberModal');
+                    document.getElementById('subscriberName').value = '';
+                    document.getElementById('subscriberPhone').value = '';
+                    document.getElementById('subscriberGoal').value = '';
+                    document.getElementById('subscriberHealth').value = '';
+                    loadData();
+                }
+            } catch (error) {
+                console.error('Error adding subscriber:', error);
+            }
+        }
+
+        async function deleteSubscriber(id) {
+            if (!confirm('هل تريد حذف هذه المشتركة؟')) return;
+
+            try {
+                await fetch(`${API_URL}/data/subscribers/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                loadData();
+            } catch (error) {
+                console.error('Error deleting subscriber:', error);
+            }
+        }
+
+        function switchSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function openAddSubscriberModal() {
+            document.getElementById('addSubscriberModal').classList.add('active');
+        }
+
+        function openAddProgramModal() {
+            alert('سيتم إضافة هذه الميزة قريباً');
+        }
+
+        function openAddMeasurementModal() {
+            alert('سيتم إضافة هذه الميزة قريباً');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function editSubscriber(id) {
+            alert('سيتم إضافة هذه الميزة قريباً');
+        }
+
+        function viewProgram(id) {
+            alert('سيتم إضافة هذه الميزة قريباً');
+        }
+
+        function deleteProgram(id) {
+            if (!confirm('هل تريد حذف هذا البرنامج؟')) return;
+            alert('سيتم إضافة هذه الميزة قريباً');
+        }
+
+        // ==================== INIT ====================
+        window.addEventListener('load', () => {
+            const savedToken = localStorage.getItem('token');
+            if (savedToken) {
+                token = savedToken;
+                // Verify token by fetching user info
+                fetch(`${API_URL}/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }).then(r => r.json()).then(data => {
+                    if (data.success) {
+                        currentUser = data.user;
+                        showApp();
+                    } else {
+                        localStorage.removeItem('token');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
